@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import com.camero.model.DataCSV
 import java.util.*
 
 
@@ -15,13 +16,11 @@ class MyAdapter// readFileData is passed into the constructor
     :
     RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private var context: Context
-    private val mName: List<String>
-    private val mPhone: List<String>
+    private val csvData: List<DataCSV>
 
-    constructor(Context: Context, mName: List<String>, mPhone: List<String>) : super() {
+    constructor(Context: Context, csvData: List<DataCSV>) : super() {
         this.context = Context
-        this.mName = mName
-        this.mPhone = mPhone
+        this.csvData = csvData
         this.mInflater = LayoutInflater.from(Context)
     }
 
@@ -57,8 +56,8 @@ class MyAdapter// readFileData is passed into the constructor
 
     // binds the readFileData to the TextView in each row
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val fullName = mName[position]
-        val phone = mPhone[position]
+        val fullName = csvData[position].name
+        val phone = csvData[position].phone
         holder.tName?.text = fullName
         holder.tPhone?.text = phone
         val androidColors = context.resources.getIntArray(R.array.androidColors)
@@ -70,13 +69,13 @@ class MyAdapter// readFileData is passed into the constructor
 
     // total number of rows
     override fun getItemCount(): Int {
-        return mName.size
+        return csvData.size
     }
 
 
     // convenience method for getting readFileData at click position
     fun getItem(id: Int): String {
-        return mName[id]
+        return csvData[id].name
     }
 
     // allows clicks events to be caught

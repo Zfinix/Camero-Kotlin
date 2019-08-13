@@ -15,10 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog.*
 import android.widget.Toast
 import android.view.View
-import android.widget.EditText
+import com.camero.model.DataCSV
 import com.developer.filepicker.model.DialogConfigs
 import com.developer.filepicker.model.DialogProperties
 import com.developer.filepicker.view.FilePickerDialog
@@ -27,9 +26,7 @@ import java.io.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adapter: MyAdapter
-    private var mPhones: ArrayList<String>? = null
-
-    private var mName: ArrayList<String>? = null
+    private var csvModel: ArrayList<DataCSV>? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var sms: String
     private val pickFileRequest: Int? = 10
@@ -51,12 +48,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        mName = ArrayList()
-        mPhones = ArrayList()
+        csvModel = ArrayList()
         sms = ""
         floatingButton = fab
         recyclerView = rv
-        adapter = MyAdapter(this, this.mName!!, this.mPhones!!)
+        adapter = MyAdapter(this, this.csvModel!!)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -176,9 +172,7 @@ class MainActivity : AppCompatActivity() {
                 data = line.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 println(line)
                 try {
-                    mName?.add(data[0])
-                    mPhones?.add(data[1])
-
+                    csvModel?.add(DataCSV(name = data[0], phone = data[1]))
                     sms = sms + data[1] + ";"
                     adapter.notifyDataSetChanged()
                     check()
@@ -189,9 +183,8 @@ class MainActivity : AppCompatActivity() {
                 line = br.readLine()
 
             }
-            if (mName?.get(0)?.toLowerCase() ?: "" == "name") {
-                mName?.removeAt(0)
-                mPhones?.removeAt(0)
+            if (csvModel?.get(0)?.name?.toLowerCase() ?: "" == "name") {
+                csvModel?.removeAt(0)
             }
 
         } else {
